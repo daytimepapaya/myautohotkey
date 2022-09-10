@@ -1,7 +1,7 @@
-#NoEnv  ; Recommended for performance and compatibility with future AutoHotkey releases.
+#NoEnv ; Recommended for performance and compatibility with future AutoHotkey releases.
 ; #Warn  ; Enable warnings to assist with detecting common errors.
-SendMode Input  ; Recommended for new scripts due to its superior speed and reliability.
-SetWorkingDir %A_ScriptDir%  ; Ensures a consistent starting directory.
+SendMode Input ; Recommended for new scripts due to its superior speed and reliability.
+SetWorkingDir %A_ScriptDir% ; Ensures a consistent starting directory.
 
 ; search selected text with Everything
 ; Control + Alt + e
@@ -21,6 +21,18 @@ Return
     ClipWait, 1
     MsgBox, %clipboard%
     ; Run, 
+Return
+
+; sort selected file.
+; outputfile name is [original file name].sort
+; RightControl + s
+#IfWinActive ahk_class CabinetWClass
+>^s::
+    clipboard := ""
+    Send, ^c
+    ClipWait, 1
+    outputfile := clipboard ".sort"
+    Run, sort.exe %clipboard% /O %outputfile%
 Return
 
 ; ;dd to insert date and time

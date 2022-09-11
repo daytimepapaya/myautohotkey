@@ -22,6 +22,7 @@ Return
     MsgBox, %clipboard%
     ; Run, 
 Return
+#IfWinActive
 
 ; sort selected file.
 ; outputfile name is [original file name].sort
@@ -32,8 +33,9 @@ Return
     Send, ^c
     ClipWait, 1
     outputfile := clipboard ".sort"
-    Run, sort.exe %clipboard% /O %outputfile%
+    Run, sort.exe %clipboard% /O %outputfile%, ,Hide
 Return
+#IfWinActive
 
 ; ;dd to insert date and time
 :*:;dd::

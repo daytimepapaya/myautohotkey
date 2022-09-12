@@ -33,7 +33,7 @@ Return
     Send, ^c
     ClipWait, 1
     outputfile := clipboard ".sort"
-    Run, sort.exe %clipboard% /O %outputfile%, ,Hide
+    Run, sort.exe "%clipboard%" /O "%outputfile%", ,Hide ; do not forget double quotation
 Return
 #IfWinActive
 

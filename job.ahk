@@ -19,7 +19,7 @@ SetNumLockState "AlwaysOn" ; always set numlock on.
 :*:;dd::
    {
       TimeString := FormatTime(, "yyyy/MM/dd HH:mm")
-      SendInput %TimeString%
+      SendInput TimeString
    }
 
 ; maven関係
@@ -162,8 +162,8 @@ HotIfWinActive "ahk_class CabinetWClass"
    setJavaEnvironmentalVariable(){
       global EnvBackupJAVAHOME
       global EnvBackupPATH
-      EnvBackupJAVAHOME := EnvGet "JAVA_HOME"
-      EnvBackupPATH := EnvGet "PATH"
+      EnvBackupJAVAHOME := EnvGet("JAVA_HOME")
+      EnvBackupPATH := EnvGet("PATH")
       EnvSet "JAVA_HOME" "C:\opt\openjdk-18.0.1.1_windows-x64_bin\jdk-18.0.1.1"
       EnvSet "PATH" "C:\opt\openjdk-18.0.1.1_windows-x64_bin\jdk-18.0.1.1\bin"
    }
@@ -172,8 +172,8 @@ HotIfWinActive "ahk_class CabinetWClass"
    releaseEnvironmentalVariable(){
       global EnvBackupJAVAHOME
       global EnvBackupPATH
-      EnvSet "JAVA_HOME" %EnvBackupJAVAHOME%
-      EnvSet "PATH" %EnvBackupPATH%
+      EnvSet "JAVA_HOME" EnvBackupJAVAHOME
+      EnvSet "PATH" EnvBackupPATH
    }
 
    ; untar log file.
@@ -185,7 +185,7 @@ HotIfWinActive "ahk_class CabinetWClass"
       send "^c"
       ClipWait 1
       searchKey := "tar.gz"
-      If InStr A_Clipboard %searchKey%
+      If InStr(A_Clipboard, searchKey)
       {
          Run 'powershell.exe -File "C:\Users\rui.kanamori\Accenture\JFE-SI Migration(倉敷) - IF-B\kanamori\tools\ExtractLog\Extract-IFB.ps1" "%A_Clipboard%"'
          return
@@ -278,14 +278,16 @@ f1::
       hwnd := WinExist("A")
       Loop Parse Explorer_GetSelection(hwnd) , "`n"
       {
-         SplitPath A_LoopField, &filename, &filepath
+         SplitPath A_LoopField, &oldName, &folder
          Newfilename := ""
-         if(checkTaihi(filename)){
-            Newfilename := rename_untaihi(filename)
+         if(checkTaihi(oldName)){
+            NewName := rename_untaihi(oldName)
          } else {
-            Newfilename := rename_taihi(filename)
+            NewName := rename_taihi(oldName)
          }
-         FileMove '% filePath "\" filename', '% filePath "\" Newfilename'
+         oldPath := folder "\" oldName
+         newPath := folder "\" newName
+         FileMove oldPath, newPath
       }
       Send "{F5}"
    }

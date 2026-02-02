@@ -1,4 +1,4 @@
-﻿#Requires AutoHotkey v2.0
+#Requires AutoHotkey v2.0
 
 ; -------------------------
 ; SAVE WITH UTF-8 WITH BOM!
@@ -52,16 +52,22 @@ SetNumLockState "AlwaysOn" ; always set numlock on.
 ; AGSのdocker用のコマンド
 ;
 ; DBの起動
-:*:;dbu::docker compose db up -d
+:*:;dbu::docker compose up db -d
 
 ; 最新バックアップでDBリストア
-:*:;dbr::docker exec db bash -c 'latest=$(ls -t /home/oracle/backup-restore-tools/bkup/*.tar.gz | head -1); echo $latest; sh /home/oracle/backup-restore-tools/oracledb_restore.sh ORCLPDB1 $latest'
+:*:;dbr::docker exec db bash -c 'latest=$(ls -t /home/oracle/backup-restore-tools/bkup/*.tar.gz | head -1); echo $latest; sh /home/oracle/backup-restore-tools/oracledb_restore.sh KMSPDB $latest'
+
+; オンラインの起動
+:*:;dbu::docker compose up online-ap
 
 ; オンラインの電文送信
 :*:;os::docker exec online-ap bash -c 'java -jar /opt/majalis/KyosaiOnlineAutoTester.jar /usr/local/ap/hh_backend_on/jsonl/'
 
+; バッチの起動
+:*:;dbu::docker compose up batch-ap
+
 ; バッチのジョブサブミット
-:*:;bs::docker exec batch-ap bash -c 'sh sbodclt.sh submit --user=USER --password=PASSWD --batchEndPoints=http://localhost:8082/mapp-batch-kyosai --jobName=[ジョブ名] --jobParameter=timestamp=`date +%Y%m%d%H%M%S` --wait'
+:*:;bs::docker exec batch-ap bash -c 'sh sbodclt.sh submit --user=USER --password=PASSWD --batchEndPoints=http://localhost:8080/mapp-batch-kyosai --jobName=[ジョブ名] --jobParameter=timestamp=$(date {+}%Y%m%d%H%M%S) --wait'
 
 ; 改行形式変換PGM起動
 ; 右Ctrl + f

@@ -58,13 +58,13 @@ SetNumLockState "AlwaysOn" ; always set numlock on.
 :*:;dbr::docker exec db bash -c 'latest=$(ls -t /home/oracle/backup-restore-tools/bkup/*.tar.gz | head -1); echo $latest; sh /home/oracle/backup-restore-tools/oracledb_restore.sh KMSPDB $latest'
 
 ; オンラインの起動
-:*:;dbu::docker compose up online-ap
+:*:;ou::docker compose up online-ap
 
 ; オンラインの電文送信
 :*:;os::docker exec online-ap bash -c 'java -jar /opt/majalis/KyosaiOnlineAutoTester.jar /usr/local/ap/hh_backend_on/jsonl/'
 
 ; バッチの起動
-:*:;dbu::docker compose up batch-ap
+:*:;bu::docker compose up batch-ap
 
 ; バッチのジョブサブミット
 :*:;bs::docker exec batch-ap bash -c 'sh sbodclt.sh submit --user=USER --password=PASSWD --batchEndPoints=http://localhost:8080/mapp-batch-kyosai --jobName=[ジョブ名] --jobParameter=timestamp=$(date {+}%Y%m%d%H%M%S) --wait'
@@ -77,11 +77,16 @@ HotIfWinActive "ahk_class CabinetWClass"
       A_Clipboard := ""
       Send "^c"
       ClipWait 1
-      setJavaEnvironmentalVariable()
+      MsgBox "Control-C copied the following contents to the clipboard:`n`n" A_Clipboard
+      ; setJavaEnvironmentalVariable()
+      ; EnvPATH2 := EnvGet("PATH")
+      ; MsgBox EnvPATH2
       Try {
-         Run "java -jar C:\Users\rui.kanamori\OneDrive - Accenture\EBCDICViewerV2.9\EBCDICViewer.jar" "%A_Clipboard%"
-      }
-      releaseEnvironmentalVariable()
+         Run "C:\opt\openjdk-18.0.1.1_windows-x64_bin\jdk-18.0.1.1\bin\java.exe -jar C:\Users\rui.kanamori\OneDrive - Accenture\EBCDICViewerV2.9\EBCDICViewer.jar" "%A_Clipboard%"
+      }catch as e
+         MsgBox(type(e) " in " e.What ", which was called at line " e.Line)
+
+      ; releaseEnvironmentalVariable()
       WinWaitActive "ahk_class SunAwtDialog"
       Send "@S"
    }
@@ -172,6 +177,7 @@ HotIfWinActive "ahk_class CabinetWClass"
       EnvBackupPATH := EnvGet("PATH")
       EnvSet "JAVA_HOME" "C:\opt\openjdk-18.0.1.1_windows-x64_bin\jdk-18.0.1.1"
       EnvSet "PATH" "C:\opt\openjdk-18.0.1.1_windows-x64_bin\jdk-18.0.1.1\bin"
+      MsgBox EnvGet("PATH")
    }
 
    ; 変数はグローバルなので %EnvBackupJAVAHOME% は参照できる
@@ -302,7 +308,7 @@ f1::
 ; 右Ctrl + numpasd 3
 >^Numpad3::
    {
-      Run 'powershell.exe -File "C:\Users\rui.kanamori\Accenture\JFE-SI Migration(倉敷) - IF-B\kanamori\tools\etc\ags-pull-prune.ps1"'
+      Run 'powershell.exe -File "git-pull-prune.ps1"'
    }
 
    ; copy (JCL|COBOL) with renamed

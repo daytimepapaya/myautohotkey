@@ -55,13 +55,13 @@ SetNumLockState "AlwaysOn" ; always set numlock on.
 :*:;dbu::docker compose up db -d
 
 ; 最新バックアップでDBリストア
-:*:;dbr::docker exec db bash -c 'latest=$(ls -t /home/oracle/backup-restore-tools/bkup/*.tar.gz | head -1); echo $latest; sh /home/oracle/backup-restore-tools/oracledb_restore.sh KMSPDB $latest'
+:*:;dbr::docker exec db bash -c 'latest=$(ls -t /home/oracle/backup-restore-tools/bkup/*.tar.{gz,zst} | head -1); echo $latest; bash /home/oracle/backup-restore-tools/oracledb_restore.sh KMSPDB $latest'
 
 ; オンラインの起動
 :*:;ou::docker compose up online-ap
 
 ; オンラインの電文送信
-:*:;os::docker exec online-ap bash -c 'java -jar /opt/majalis/KyosaiOnlineAutoTester.jar /usr/local/ap/hh_backend_on/jsonl/'
+:*:;os::docker exec online-ap bash -c 'java -jar /opt/majalis/KyosaiOnlineAutoTester.jar /app/backend/jsonl/'
 
 ; バッチの起動
 :*:;bu::docker compose up batch-ap
@@ -214,7 +214,7 @@ HotIfWinActive "ahk_class CabinetWClass"
 ; 右Ctrl + g
 >^g::
    {
-      Run "C:\Users\rui.kanamori\Accenture\JFE-SI Migration(倉敷) - IF-B\kanamori\tools\TresGrep\TresGrep.exe"
+      Run "c:\Users\rui.kanamori\OneDrive - Accenture\TresGrep_1.23_20210604\TresGrep\TresGrep.exe"
    }
 
    ; grep "[err" with sakura editor.

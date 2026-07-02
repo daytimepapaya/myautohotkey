@@ -55,7 +55,7 @@ SetNumLockState "AlwaysOn" ; always set numlock on.
 :*:;dbu::docker compose up db -d
 
 ; 最新バックアップでDBリストア
-:*:;dbr::docker exec db bash -c 'latest=$(ls -t /home/oracle/backup-restore-tools/bkup/*.tar.{gz,zst} | head -1); echo $latest; bash /home/oracle/backup-restore-tools/oracledb_restore.sh KMSPDB $latest'
+:*:;dbr::docker exec db bash -c 'latest=$(ls -t /home/oracle/backup-restore-tools/bkup/*.tar.{{}gz,zst{}}} | head -1); echo $latest; bash /home/oracle/backup-restore-tools/oracledb_restore.sh KMSPDB $latest'
 
 ; オンラインの起動
 :*:;ou::docker compose up online-ap

@@ -18,8 +18,8 @@ SetNumLockState "AlwaysOn" ; always set numlock on.
 ; ;dd 時刻
 :*:;dd::
    {
-      TimeString := FormatTime(, "yyyy/MM/dd HH:mm")
-      SendInput TimeString
+    TimeString := FormatTime(, "yyyy-MM-dd_HHmmss")
+    Send(TimeString)
    }
 
 ; maven関係
